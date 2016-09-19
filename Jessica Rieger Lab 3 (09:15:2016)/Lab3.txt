@@ -21,7 +21,7 @@ WHERE city='Duluth';
 --5--
 SELECT name
 FROM Agents
-WHERE city != 'New York' 
+WHERE city != 'New York'
 AND city != 'Duluth';
 
 --6--
