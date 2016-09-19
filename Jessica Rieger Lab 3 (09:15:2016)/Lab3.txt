@@ -8,7 +8,7 @@ FROM Agents
 WHERE name='Smith';
 
 --3--
-SELECT name, pid, priceUSD
+SELECT pid, name, priceUSD
 FROM Products
 WHERE quantity>201000;
 
