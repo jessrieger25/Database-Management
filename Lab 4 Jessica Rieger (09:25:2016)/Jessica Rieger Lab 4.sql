@@ -40,10 +40,14 @@ WHERE pid = 'p01';
 /*5 Get	the	ids	of	products	not	ordered	by	any	customers	who	placed	any	order	through	
 agent	a08	in	pid	order	from	highest	to	lowest.	*/
 SELECT pid
-FROM Orders
-WHERE cid Not in (SELECT cid
-		  	      FROM Orders
-	              WHERE aid = 'a08');
+FROM Products
+WHERE pid not in (SELECT DISTINCT pid
+		  		  FROM Orders
+		  		  WHERE cid IN (SELECT cid
+		  	        		    FROM Orders
+								WHERE aid = 'a08')
+		  		  )
+ORDER BY pid DESC;
 
 /*6 Get	the	name,	discounts,	and	city	for	all	customers	who	place	orders	through	agents	
 in	Dallas	or	New	York.	*/
@@ -65,25 +69,22 @@ WHERE discount in (SELECT discount
 		  		   FROM Customers
 		  		   WHERE city in ('Dallas', 'London')
 		 		   )
-      and city not in ('Dallas', 'London');
 
 --8 
 --What are check constraints? What are they good for? What is the advantage of putting that sort of thing in the database?
 /*A check constraint is a condition that limits what you can put as a value in a particular column. 
 If the value you are trying to insert into the column violates the constraint then it is not inserted into the column. They are good 
-because they allow us to ensure that only the correct type of data is entered into certain columns.  One of the benefits of check constraints
+because they allow us to ensure that only the correct values for the data are entered into certain columns.  One of the benefits of check constraints
 is that they allow us to set rules for data insertion at the database level so that they hold true for any application that may use the SQL code. Another 
 way of saying this is that the constraint can not be bypassed by the application.  Essentially, check constraints provide consistency (data integrity) so that all 
 applications follow the same rules regarding data without having to be programmed individually.  As well, if the constraint is wrong, it is only wrong in one
-place so only one thing has to be fixed. 
+place so only that one error must be fixed. 
 Good way to use check constraint:
-A good example of a check constraint would be using it in a scenario where you want the ages of the users, but you obviously know that the ages can not be negative.
-Due to this, you would want to put a constraint on your inout for that column that says age > 0.  Though this may seem like a simple example, the rule would not be enforced
+A good example of a check constraint would be using it in a scenario where you want the ages of the users.  Obviously know that the ages can not be negative.
+Due to this, you would want to put a constraint on your input for that column that says age > 0.  Though this may seem like a simple example, the rule would not be enforced
 without this constraint because your value would probably be defined as an integer which can be negative. 
 Bad way to use check constraint: 
-One bad way to use a check constraint would be when trying to limit the values entered in a particular column that may contain null values.  The reason for this is that when
-the check constraint evaluates a statement with null it will return UNKNOWN not False so it will basically allow any value to be entered. For example, if you want to change the
-amount of money a worker is paid from NULL to 9, but you type it wrong as 9.0, the value will be inserted even though it is a double when the value in that column should be an INT. 
-Another small example of when it is bad to use constraints is when you are trying to restrict the exact string that you want within a column.  For example if you want a column to 
-contain either "yes", or "NO", or "maybe", but not "no" or "YES" or any other variation, simply setting a constraint would not work.  This is because constraints are case insensitive so
-they would not see the difference between all of the strings.  
+One bad way to use a check constraint would be when the values that you want to check are going to change. For example, it would not be proper to use a Check Constraint for the 
+military bases of the US because they are changing often so it would be better to use a foreign key constraint in this circumstance. If you were to use a check constraint it would
+be much harder to change the database rules because you would have to drop the table and completely redo its outline and its data.  On the other hand, with a foreign key you could simply 
+add or remove the bases as they change in the real world.  
