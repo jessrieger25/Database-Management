@@ -24,9 +24,9 @@ Order By pid DESC;
 --3 Get	the	ids	and	names	of	customers	who	did	not	place	an	order	through	agent	a03.
 SELECT cid, name
 FROM CUSTOMERS
-WHERE cid in (SELECT distinct cid
-	          FROM Orders
-	          WHERE aid != 'a03');
+WHERE cid not in (SELECT distinct cid
+	          	  FROM Orders
+	          	  WHERE aid = 'a03');
 
 --4  Get	the	ids	of	customers	who	ordered	both	product	p01	and	p07.	
 SELECT cid
@@ -53,13 +53,13 @@ ORDER BY pid DESC;
 in	Dallas	or	New	York.	*/
 SELECT name, discount, city
 FROM Customers
-WHERE cid in (SELECT cid
+WHERE cid in (SELECT distinct cid
 	      	  FROM Orders
 	          WHERE aid in (SELECT aid
 		            		FROM Agents
 			    			WHERE city in ('Dallas', 'New York')
-			    )
-	     );
+			  )
+);
 
 /*7 Get	all	customers	who	have	the	same	discount	as	that	of	any	customers	in	Dallas	or	
 London*/
@@ -68,7 +68,7 @@ FROM Customers
 WHERE discount in (SELECT discount
 		  		   FROM Customers
 		  		   WHERE city in ('Dallas', 'London')
-		 		   )
+		 		   );
 
 --8 
 --What are check constraints? What are they good for? What is the advantage of putting that sort of thing in the database?
@@ -80,9 +80,10 @@ way of saying this is that the constraint can not be bypassed by the application
 applications follow the same rules regarding data without having to be programmed individually.  As well, if the constraint is wrong, it is only wrong in one
 place so only that one error must be fixed. 
 Good way to use check constraint:
-A good example of a check constraint would be using it in a scenario where you want the ages of the users.  Obviously know that the ages can not be negative.
+A good example of a check constraint would be using it in a scenario where you want the ages of the users.  Obviously, we know that the ages can not be negative.
 Due to this, you would want to put a constraint on your input for that column that says age > 0.  Though this may seem like a simple example, the rule would not be enforced
-without this constraint because your value would probably be defined as an integer which can be negative. 
+without this constraint because your value would probably be defined as an integer which can be negative.  This is also a good example because age will always have ot be 
+postitive so the constraint will never need to be changed.  
 Bad way to use check constraint: 
 One bad way to use a check constraint would be when the values that you want to check are going to change. For example, it would not be proper to use a Check Constraint for the 
 military bases of the US because they are changing often so it would be better to use a foreign key constraint in this circumstance. If you were to use a check constraint it would
