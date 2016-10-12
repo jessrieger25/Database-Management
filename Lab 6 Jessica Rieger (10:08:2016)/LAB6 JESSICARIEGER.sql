@@ -4,44 +4,39 @@
 
 --1. Display the name and city of customers who live in any city that makes the most different kinds of products. 
 --(There are two cities that make the most different products. Return the name and city of customers from either one of those.)
+Select name, city
+FROM Customers
+WHERE city in (Select city
+	       From Products
+	       group by city
+	       order by count(pid) DESC
+	       limit 1
+	       );
 
-create view countOFCities 
-AS
-SELECT customers.name, customers.city, count(products.city) as o
-FROM Products, customers
-WHERE products.city = customers.city
-GROUP BY customers.city, customers.name
-ORDER BY o DESC;
-
-SELECT name, city
-FROM countOFCities 
-WHERE o in (SELECT max(o)
-		    FROM countOFCities 
-		    );
-		    
+   
 --2. Display the names of products whose priceUSD is strictly below the average priceUSD, in reverse-alphabetical order.
 
 SELECT name
 FROM Products
 WHERE priceUSD < (SELECT avg(priceUSD)
-		   		  FROM Products);
+		   		  FROM Products)
+ORDER BY name DESC;
 
 --3. Display the customer name, pid ordered, and the total for all orders, sorted by total from low to high.
 
-select Customers.name, Orders.pid, totalUSD
-FROM Customers, Orders
-WHERE Customers.cid = Orders.cid
-ORDER BY totalUSD ASC;
-
---ASK!!!
+select c2.name, c1.cid, o.pid, sum(totalUSD) as total
+FROM Customers c1, Orders o, Customers c2 
+WHERE c2.cid = c1.cid
+  AND c1.cid = o.cid
+GROUP BY c1.cid, o.pid, c2.name
+ORDER BY total ASC;
 
 --4. Display all customer names (in alphabetical order) and their total ordered, and nothing more. Use coalesce to avoid showing NULLs.
-SELECT Customers.name, sum(totalUSD)
+SELECT Customers.name, coalesce(sum(totalUSD), '0') as sumToTalUSD
 FROM Customers Left Outer Join Orders ON Customers.cid = Orders.cid
 GROUP BY Orders.cid, customers.name
 ORDER BY Customers.name ASC;
 
---ASK!!
 
 --5. Display the names of all customers who bought products from agents based in
 -- New York along with the names of the products they ordered, 
