@@ -43,7 +43,7 @@ WHERE Agents.aid = Orders.aid
 --6. . Show	the	names	of	customers	and	agents	living	in	the	same	city,	along	with	the	name	
 --of	the	shared	city,	regardless	of	whether	or	not	the	customer	has	ever	placed	an	order	
 --with	that	agent.		
-SELECT DISTINCT Customers.name, Agents.name
+SELECT DISTINCT Customers.name, Agents.name, Customers.city
 FROM Agents, Customers
 WHERE Customers.city = Agents.city;
 
