@@ -24,7 +24,7 @@ ORDER BY name DESC;
 
 --3. Display the customer name, pid ordered, and the total for all orders, sorted by total from low to high.
 
-select c2.name, c1.cid, o.pid, sum(totalUSD) as total
+select c2.name, o.pid, sum(totalUSD) as total
 FROM Customers c1, Orders o, Customers c2 
 WHERE c2.cid = c1.cid
   AND c1.cid = o.cid
@@ -74,9 +74,10 @@ WHERE myCalc.total != Orders.totalUSD;
 left) refers to the table that you would like to select (either on the right side of the "outer join" words or the left.)  For 
 example, by saying Customers right outer join Orders, we would select all the rows where the two tables have the same value
 for the condition that we define, plus all of the other rows from Orders (since that is on the right.)  A more specific example 
-would be that if we say "Customers left outer join Orders ON Customers.cid = Orders.cid" then the query would return all the rows 
+would be that if we say "Customers left outer join Orders ON Customers.cid = Orders.cid ON Orders.cid = Customers.cid" then the query would return all the rows 
 of the joined table where the cid is the same, and the rows of customers that do not have a cid that is present in Orders.  In the
-CAP database, that would be Weyland. */
+CAP database, that would be Weyland. The reverse would be true if we were to say Customers right outer join Orders ON Orders.cid = 
+Customers.cid */
   
 
 
