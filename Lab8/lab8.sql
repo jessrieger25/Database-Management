@@ -4,7 +4,8 @@
 -- SQL statements for movie database
 -- 
 -- Modified several times by Jessica Rieger
-----------------------------------------------------------------------------------------
+
+--ADD REFERENCES KEYWORDS!!!-------------------------------------------------------------------------------
 
 DROP TABLE IF EXISTS CastMembers;
 DROP TABLE IF EXISTS Actors;
@@ -23,7 +24,7 @@ CREATE TABLE People (
 
 -- Actors --
 CREATE TABLE Actors (
-  PID      		char(4) not null,
+  PID      		char(4) not null references People(PID),
   BirthDate		Date,
   HairColor		text,
   EyeColor		text,
@@ -36,17 +37,23 @@ CREATE TABLE Actors (
 
 -- Directors --
 CREATE TABLE Directors (
-  PID      			char(4) not null,
-  FilmSchoolAttended		text,
+  PID      				char(4) not null references People(PID),
+  FilmSchoolAttended	text,
   DGAnniversary			Date,
   FavoriteLensMaker		text,
   primary key(PID)
 );
 
+--Roles--
+CREATE TABLE Roles (
+  RoleID	char(3) not null,
+  RoleName	text 
+);
+
 -- Movies -- 
 CREATE TABLE Movies (
   MPAANumber		int not null,
-  Name			text,
+  Name				text,
   YearReleased		int,
   domesticBOSUSD	text,
   foreignBOSUSD		text,
@@ -56,9 +63,9 @@ CREATE TABLE Movies (
 
 -- CastMembers --
 CREATE TABLE CastMembers (
-  PID      		   char(4) not null,
-  RoleID   		   default 'A' check (RoleID = 'A' or RoleID = 'D'),
-  MPAANumber	   	   char(4) not null,
+  PID      		   char(4) not null references People(PID),
+  RoleID   		   char(3) not null references Roles(RoleID),
+  MPAANumber	   char(4) not null references Movies(MPAANumber),
   primary key(PID, RoleID, MPAANumber)
 );
 
@@ -67,22 +74,11 @@ CREATE TABLE CastMembers (
 
 --4. Query
 
-  
-Select * 
-From Directors
-Where PID in (Select pid
-From CastMembers
-Where MPAANumber IN ( Select MPAANumber
-			   From CastMembers
-			   Where pid in (Select PID 
-			  				 From People
-              				 Where name = "Sean Connery"); 
-
 Select * 
 From Directors d Inner Join CastMembers c ON d.PID = c.PID
-Where MPAANumber in (Select MPAA
-		     From CastMembers c Inner Join People p ON p.PID = c.PID
-		     Where name = "Sean Connery" );
+Where MPAANumber in (Select MPAANumber
+		     		 From CastMembers c Inner Join People p ON p.PID = c.PID
+		    		 Where name = "Sean Connery" );
 
 
 
