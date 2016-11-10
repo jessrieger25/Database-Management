@@ -8,6 +8,7 @@
 --ADD REFERENCES KEYWORDS!!!-------------------------------------------------------------------------------
 
 DROP TABLE IF EXISTS CastMembers;
+Drop Table IF EXISTS Roles;
 DROP TABLE IF EXISTS Actors;
 DROP TABLE IF EXISTS Directors;
 DROP TABLE IF EXISTS Movies;
@@ -15,21 +16,21 @@ DROP TABLE IF EXISTS People;
 
 -- People --
 CREATE TABLE People (
-  PID		char(4) not null
-  Name		text,
-  Address	text, 
+  PID			char(4) not null
+  Name			text,
+  Address		text, 
   SpouseName	text,
   primary key(PID)
 );  
 
 -- Actors --
 CREATE TABLE Actors (
-  PID      		char(4) not null references People(PID),
-  BirthDate		Date,
-  HairColor		text,
-  EyeColor		text,
+  PID      			char(4) not null references People(PID),
+  BirthDate			Date,
+  HairColor			text,
+  EyeColor			text,
   HeightINCH		text,
-  WeightLBS		numeric(5,2),
+  WeightLBS			numeric(5,2),
   FavoriteColor 	text,
   SAGAnniversary 	Date,
   primary key(PID)
