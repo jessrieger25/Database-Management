@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS People;
 -- People --
 CREATE TABLE People (
   PID			char(4) not null
-  Name			text,
+  name			text,
   Address		text, 
   SpouseName	text,
   primary key(PID)
@@ -48,7 +48,7 @@ CREATE TABLE Directors (
 --Roles--
 CREATE TABLE Roles (
   RoleID	char(3) not null,
-  RoleName	text 
+  name		text 
 );
 
 -- Movies -- 
@@ -78,7 +78,7 @@ CREATE TABLE CastMembers (
 Select * 
 From Directors d Inner Join CastMembers c ON d.PID = c.PID
 Where MPAANumber in (Select MPAANumber
-		     		 From CastMembers c Inner Join People p ON p.PID = c.PID
+		     		 From CastMembers c Inner Join People p ON c.PID = p.PID
 		    		 Where name = "Sean Connery" );
 
 
