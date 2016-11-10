@@ -5,7 +5,7 @@
 -- 
 -- Modified several times by Jessica Rieger
 
---ADD REFERENCES KEYWORDS!!!-------------------------------------------------------------------------------
+
 
 DROP TABLE IF EXISTS CastMembers;
 Drop Table IF EXISTS Roles;
@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS People;
 -- People --
 CREATE TABLE People (
   PID			char(4) not null
-  name			text,
+  Name			text,
   Address		text, 
   SpouseName	text,
   primary key(PID)
@@ -48,7 +48,7 @@ CREATE TABLE Directors (
 --Roles--
 CREATE TABLE Roles (
   RoleID	char(3) not null,
-  name		text 
+  Name		text 
 );
 
 -- Movies -- 
@@ -79,7 +79,7 @@ Select *
 From Directors d Inner Join CastMembers c ON d.PID = c.PID
 Where MPAANumber in (Select MPAANumber
 		     		 From CastMembers c Inner Join People p ON c.PID = p.PID
-		    		 Where name = "Sean Connery" );
+		    		 Where Name = "Sean Connery" );
 
 
 
