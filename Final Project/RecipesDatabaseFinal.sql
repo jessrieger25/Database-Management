@@ -9,7 +9,6 @@ drop view if exists publicationinformation;
 drop table if exists Published;
 drop table if exists CookbookAuthors;
 drop table if exists BlogAuthors;
-
 drop table if exists Chefs;
 drop table if exists PublishMethodsThemesList;
 drop table if exists Blogs;
@@ -21,7 +20,7 @@ drop table if exists Photos;
 drop table if exists AffinitiesList;
 drop table if exists FlavorAffinities;
 drop table if exists RecipeThemesList;
-
+drop table if exists recipegroups;
 drop table if exists IngredientsOfSubstitution;
 drop table if exists Substitutions;
 drop table if exists PartsList;
@@ -30,7 +29,6 @@ drop table if exists Utensils;
 drop table if exists Ingredients;
 drop table if exists Recipes;
 drop table if exists Parts;
-drop table if exists PublishRoles;
 drop table if exists Themes;
 drop table if exists Authors;
 drop table if exists People;
@@ -187,7 +185,7 @@ CREATE TABLE RecipeThemesList (
 CREATE TABLE Utensils (
     UID  				text not null,
     Name 				text not null,
-    Brand 	 			text not null,
+    Brand 	 			text,
     AlternateUtensil 	text,
     Material 			text,
   PRIMARY KEY (UID)
@@ -201,7 +199,7 @@ CREATE TABLE Utensils (
 CREATE TABLE UtensilsList (
     RID  			text not null references Recipes(RID),
     UID 			text not null references Utensils(UID),
-    Quantity  		integer,
+    Quantity  		integer not null,
   PRIMARY KEY (UID, RID)
 );
 
@@ -212,8 +210,8 @@ CREATE TABLE Photos (
     PhID  		text not null,
     HeightPX 	integer not null,
     WidthPX  	integer not null,
-    DateAdded 	date,
-    Edited 		boolean,
+    DateAdded 	date not null,
+    Edited 		boolean not null,
   PRIMARY KEY (PhID)
 );
 
@@ -233,7 +231,7 @@ CREATE TABLE PhotosList (
 --
 
 CREATE TABLE Steps (
-    StepNum  	text not null,
+    StepNum  	integer not null,
     RID			text not null references Recipes(RID),
     Descr 		text not null,
   PRIMARY KEY (StepNum, RID)
@@ -531,22 +529,22 @@ VALUES ('PH01', 'R01');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R01', 'Preheat the oven to 425 degrees Fahrenheit and line a rimmed baking sheet with parchment paper. Place the butternut squash on the pan and drizzle each half with just enough olive oil to lightly coat the squash on the inside (about 1 teaspoon each). Rub the oil over the inside of the squash and sprinkle it with salt and pepper.');
+VALUES (1, 'R01', 'Preheat the oven to 425 degrees Fahrenheit and line a rimmed baking sheet with parchment paper. Place the butternut squash on the pan and drizzle each half with just enough olive oil to lightly coat the squash on the inside (about 1 teaspoon each). Rub the oil over the inside of the squash and sprinkle it with salt and pepper.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R01', 'Turn the squash face down and roast until it is tender and completely cooked through, about 45 to 50 minutes. Set the squash aside until it’s cool enough to handle, about 10 minutes. Then use a large spoon to scoop the butternut squash flesh into a bowl and discard the tough skin.');
+VALUES (2, 'R01', 'Turn the squash face down and roast until it is tender and completely cooked through, about 45 to 50 minutes. Set the squash aside until it’s cool enough to handle, about 10 minutes. Then use a large spoon to scoop the butternut squash flesh into a bowl and discard the tough skin.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R01', 'Meanwhile, in a medium skillet (or large soup pot, if you’ll be serving soup from that pot), warm 1 tablespoon olive oil over medium heat until shimmering. Add the chopped shallot and 1 teaspoon salt. Cook, stirring often, until the shallot has softened and is starting to turn golden on the edges, about 3 to 4 minutes. Add the garlic and cook until fragrant, about 30 seconds, stirring frequently.');
+VALUES (3, 'R01', 'Meanwhile, in a medium skillet (or large soup pot, if you’ll be serving soup from that pot), warm 1 tablespoon olive oil over medium heat until shimmering. Add the chopped shallot and 1 teaspoon salt. Cook, stirring often, until the shallot has softened and is starting to turn golden on the edges, about 3 to 4 minutes. Add the garlic and cook until fragrant, about 30 seconds, stirring frequently.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R01', 'If you have a high performance blender like a Vitamix (see notes if you are using an immersion blender instead), transfer the cooked shallot and garlic to your blender. Add the reserved butternut, maple syrup, nutmeg and a few twists of freshly ground black pepper. Pour in 3 cups vegetable broth, being careful not to fill the container past the maximum fill line (you can stir in any remaining broth later). Secure the lid and select the soup preset. The blender will stop running once the soup is super creamy and hot.');
+VALUES (4, 'R01', 'If you have a high performance blender like a Vitamix (see notes if you are using an immersion blender instead), transfer the cooked shallot and garlic to your blender. Add the reserved butternut, maple syrup, nutmeg and a few twists of freshly ground black pepper. Pour in 3 cups vegetable broth, being careful not to fill the container past the maximum fill line (you can stir in any remaining broth later). Secure the lid and select the soup preset. The blender will stop running once the soup is super creamy and hot.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S5', 'R01', 'If you would like to thin out your soup a bit more, add the remaining cup of broth (I used the full 4 cups, but if you used a small squash, you might want to leave it as is). Add 1 to 2 tablespoons butter or olive oil, to taste, and blend well. Taste and blend in more salt and pepper, if necessary.');
+VALUES (5, 'R01', 'If you would like to thin out your soup a bit more, add the remaining cup of broth (I used the full 4 cups, but if you used a small squash, you might want to leave it as is). Add 1 to 2 tablespoons butter or olive oil, to taste, and blend well. Taste and blend in more salt and pepper, if necessary.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S6', 'R01', 'Serve immediately (I like to top each bowl with a little more black pepper). Let leftover soup cool completely before transferring it to a proper storage container and refrigerating it for up to 4 days (leftovers taste even better the next day!). Or, freeze this soup for up to 3 months.');
+VALUES (6, 'R01', 'Serve immediately (I like to top each bowl with a little more black pepper). Let leftover soup cool completely before transferring it to a proper storage container and refrigerating it for up to 4 days (leftovers taste even better the next day!). Or, freeze this soup for up to 3 months.');
 
 
 --Themes--
@@ -710,19 +708,19 @@ VALUES ('PH02', 'R02');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R02', 'Preheat the oven to 350 degrees F. Grease and flour 2 (8 1/2 by 4 1/4 by 2 1/2-inch) loaf pans. You may also line the bottom with parchment paper, if desired.');
+VALUES (1, 'R02', 'Preheat the oven to 350 degrees F. Grease and flour 2 (8 1/2 by 4 1/4 by 2 1/2-inch) loaf pans. You may also line the bottom with parchment paper, if desired.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R02', 'Cream the butter and 2 cups granulated sugar in the bowl of an electric mixer fitted with the paddle attachment, until light and fluffy, about 5 minutes. With the mixer on medium speed, add the eggs, 1 at a time, and the lemon zest.');
+VALUES (2, 'R02', 'Cream the butter and 2 cups granulated sugar in the bowl of an electric mixer fitted with the paddle attachment, until light and fluffy, about 5 minutes. With the mixer on medium speed, add the eggs, 1 at a time, and the lemon zest.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R02', 'Sift together the flour, baking powder, baking soda, and salt in a bowl. In another bowl, combine 1/4 cup lemon juice, the buttermilk, and vanilla. Add the flour and buttermilk mixtures alternately to the batter, beginning and ending with the flour. Divide the batter evenly between the pans, smooth the tops, and bake for 45 minutes to 1 hour, until a cake tester comes out clean.');
+VALUES (3, 'R02', 'Sift together the flour, baking powder, baking soda, and salt in a bowl. In another bowl, combine 1/4 cup lemon juice, the buttermilk, and vanilla. Add the flour and buttermilk mixtures alternately to the batter, beginning and ending with the flour. Divide the batter evenly between the pans, smooth the tops, and bake for 45 minutes to 1 hour, until a cake tester comes out clean.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R02', 'Combine 1/2 cup granulated sugar with 1/2 cup lemon juice in a small saucepan and cook over low heat until the sugar dissolves. When the cakes are done, allow to cool for 10 minutes. Remove the cakes from the pans and set them on a rack set over a tray or sheet pan; spoon the lemon syrup over them. Allow the cakes to cool completely.');
+VALUES (4, 'R02', 'Combine 1/2 cup granulated sugar with 1/2 cup lemon juice in a small saucepan and cook over low heat until the sugar dissolves. When the cakes are done, allow to cool for 10 minutes. Remove the cakes from the pans and set them on a rack set over a tray or sheet pan; spoon the lemon syrup over them. Allow the cakes to cool completely.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S5', 'R02', 'For the glaze, combine the confectioners sugar and the lemon juice in a bowl, mixing with a wire whisk until smooth. Pour over the tops of the cakes and allow the glaze to drizzle down the sides.');
+VALUES (5, 'R02', 'For the glaze, combine the confectioners sugar and the lemon juice in a bowl, mixing with a wire whisk until smooth. Pour over the tops of the cakes and allow the glaze to drizzle down the sides.');
 
 --Recipe Themes--
 
@@ -917,13 +915,13 @@ VALUES ('PH04', 'R03');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R03', 'Place the pork and all the ingredients in part 1 into the crockpot and cook on low for 8 hours.');
+VALUES (1, 'R03', 'Place the pork and all the ingredients in part 1 into the crockpot and cook on low for 8 hours.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R03', 'Pull the pork apart with a fork.');
+VALUES (2, 'R03', 'Pull the pork apart with a fork.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R03', 'Assemble the taco using all the ingredients in part 2.');
+VALUES (3, 'R03', 'Assemble the taco using all the ingredients in part 2.');
 
 --Recipe Themes--
 
@@ -1071,22 +1069,22 @@ VALUES ('PH05', 'R04');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R04', 'Put stone in oven and preheat it to 425 degrees F.');
+VALUES (1, 'R04', 'Put stone in oven and preheat it to 425 degrees F.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R04', 'Wash Spinach, put in saucepan, put top on and cook until wilted (2-3 min.)  Drain and squeeze out excess water.');
+VALUES (2, 'R04', 'Wash Spinach, put in saucepan, put top on and cook until wilted (2-3 min.)  Drain and squeeze out excess water.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R04', 'Put oil and garlic in skillet and cook for 1 min. Then add spinach for additional 3-4 min. Season with salt and pepper.');
+VALUES (3, 'R04', 'Put oil and garlic in skillet and cook for 1 min. Then add spinach for additional 3-4 min. Season with salt and pepper.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R04', 'Divide dough in 4. Roll out on floured surface.  Spread oil and tomato sauce on top.');
+VALUES (4, 'R04', 'Divide dough in 4. Roll out on floured surface.  Spread oil and tomato sauce on top.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S5', 'R04', 'Spread 1/4 spinach on each pizza, leaving room for egg in middle. Cover spinach with mozzarella.');
+VALUES (5, 'R04', 'Spread 1/4 spinach on each pizza, leaving room for egg in middle. Cover spinach with mozzarella.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S6', 'R04', 'Transfer to stone, cook for 10 min. Crack egg in middle and cover with gruyere and cook until egg done. (5-10 min)');
+VALUES (6, 'R04', 'Transfer to stone, cook for 10 min. Crack egg in middle and cover with gruyere and cook until egg done. (5-10 min)');
 
 --Recipe Themes List--
 
@@ -1251,19 +1249,19 @@ VALUES ('PH06', 'R05');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R05', 'Bring 2 cups of water to boil in saucepan with the salt.  Add chicken, return to boil, then simmer for 13 min.');
+VALUES (1, 'R05', 'Bring 2 cups of water to boil in saucepan with the salt.  Add chicken, return to boil, then simmer for 13 min.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R05', 'Boil potatoes and carrots, cut and put in mixing bowl.');
+VALUES (2, 'R05', 'Boil potatoes and carrots, cut and put in mixing bowl.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R05', 'Skin the chicken, tear into shreds, and add to the carrots and potatoes.');
+VALUES (3, 'R05', 'Skin the chicken, tear into shreds, and add to the carrots and potatoes.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R05', 'Mix 3 tablespoons broth, vinegar, oregano, and salt in small bowl. Add to chicken with chiles and onion and let stand for 45 min.');
+VALUES (4, 'R05', 'Mix 3 tablespoons broth, vinegar, oregano, and salt in small bowl. Add to chicken with chiles and onion and let stand for 45 min.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S5', 'R05', 'Before serving, add avocado, lettuce, oil and salt to taste.  Lay onion rings on top.');
+VALUES (5, 'R05', 'Before serving, add avocado, lettuce, oil and salt to taste.  Lay onion rings on top.');
 
 --Recipe Themes--
 
@@ -1399,19 +1397,19 @@ VALUES ('PH07', 'R06');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R06', 'Place bacon slices in a pan on med-heat and cook until they are cooked how you like them. Place a paper towel on a plate and set the bacon on top to cool.');
+VALUES (1, 'R06', 'Place bacon slices in a pan on med-heat and cook until they are cooked how you like them. Place a paper towel on a plate and set the bacon on top to cool.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R06', 'Place the two halves of the English muffin on a baking sheet.  Place thin slices of Brie cheese on both sides. ');
+VALUES (2, 'R06', 'Place the two halves of the English muffin on a baking sheet.  Place thin slices of Brie cheese on both sides. ');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R06', 'Put the muffins in the oven and turn it on to broil.');
+VALUES (3, 'R06', 'Put the muffins in the oven and turn it on to broil.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R06', 'While the muffins are toasting, slice the tomato and avocado.');
+VALUES (4, 'R06', 'While the muffins are toasting, slice the tomato and avocado.');
 
 INSERT INTO Steps(StepNum, RID, Descr) 
-VALUES ('S5', 'R06', 'Once the English muffins are toasted and the Brie has melted, take them out of the oven and place the remaining ingredients on top.');
+VALUES (5, 'R06', 'Once the English muffins are toasted and the Brie has melted, take them out of the oven and place the remaining ingredients on top.');
 
 --Recipe Themes--
 
@@ -1535,16 +1533,16 @@ VALUES ('PH09', 'R07');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R07', 'Brown Steak in butter.');
+VALUES (1, 'R07', 'Brown Steak in butter.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R07', 'Add tomatoes, onion and green pepper.');
+VALUES (2, 'R07', 'Add tomatoes, onion and green pepper.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R07', 'Simmer 2 hours or until done, either in the oven or on top of stove.');
+VALUES (3, 'R07', 'Simmer 2 hours or until done, either in the oven or on top of stove.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R07', 'Garnish with parsley.');
+VALUES (4, 'R07', 'Garnish with parsley.');
 
 --Recipe Themes--
 
@@ -1648,13 +1646,13 @@ VALUES ('PH10', 'R08');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R08', 'Heat olive oil on med. heat then add onions and garlic. ');
+VALUES (1, 'R08', 'Heat olive oil on med. heat then add onions and garlic. ');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R08', 'Add the ground beef and cook until mostly cooked.');
+VALUES (2, 'R08', 'Add the ground beef and cook until mostly cooked.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R08', 'Once fragrant, add the rest of the ingredients and season to taste.  Let cook 20 min.');
+VALUES (3, 'R08', 'Once fragrant, add the rest of the ingredients and season to taste.  Let cook 20 min.');
 
 
 --Recipe Themes List--
@@ -1744,31 +1742,31 @@ VALUES ('PH11', 'R09');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R09', 'Add 2 sticks of refrigerated butter to the kitchen Aid mixer bowl and beat on low until it’s just a little mushed.  Roughly 30 sec.');
+VALUES (1, 'R09', 'Add 2 sticks of refrigerated butter to the kitchen Aid mixer bowl and beat on low until it’s just a little mushed.  Roughly 30 sec.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R09', 'Add brown sugar and white sugar, then cover with hands while beating on high until med/small clumps form.');
+VALUES (2, 'R09', 'Add brown sugar and white sugar, then cover with hands while beating on high until med/small clumps form.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R09', 'Take the bowl out from under the kitchen aid and using a rice spoon/paddle mash the clumps of butter against the side of the bowl until most of them are broken up and gone. ');
+VALUES (3, 'R09', 'Take the bowl out from under the kitchen aid and using a rice spoon/paddle mash the clumps of butter against the side of the bowl until most of them are broken up and gone. ');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R09', 'Add eggs, baking soda, salt, and vanilla then mix. of butter against the side of the bowl until most of them are broken up and gone. ');
+VALUES (4, 'R09', 'Add eggs, baking soda, salt, and vanilla then mix. of butter against the side of the bowl until most of them are broken up and gone. ');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S5', 'R09', 'Add flour then mix.');
+VALUES (5, 'R09', 'Add flour then mix.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S6', 'R09', 'Add oats and chocolate chips then mix. ');
+VALUES (6, 'R09', 'Add oats and chocolate chips then mix. ');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S7', 'R09', 'Refrigerate for an hour or 2 but NOT overnight!');
+VALUES (7, 'R09', 'Refrigerate for an hour or 2 but NOT overnight!');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S8', 'R09', 'Preheat oven 350 degrees.');
+VALUES (8, 'R09', 'Preheat oven 350 degrees.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S9', 'R09', 'Scoop onto baking stone or greased cookie sheet and bake for 10-12 min or to your preference.');
+VALUES (9, 'R09', 'Scoop onto baking stone or greased cookie sheet and bake for 10-12 min or to your preference.');
 
 --Recipe Themes--
 
@@ -1935,31 +1933,31 @@ VALUES ('PH12', 'R10');
 --Steps--
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S1', 'R10', 'For the dough:');
+VALUES (1, 'R10', 'For the dough:');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S2', 'R10', 'In a food processor, pulse together the flour, sugar, and salt. Drop in the butter, and pulse until the mixture looks like coarse crumbs. Beat together the egg yolks and water, and pour into the processor. Pulse until the dough just comes together, adding a little water if crumbly, or a little flour if it is too wet.');
+VALUES (2, 'R10', 'In a food processor, pulse together the flour, sugar, and salt. Drop in the butter, and pulse until the mixture looks like coarse crumbs. Beat together the egg yolks and water, and pour into the processor. Pulse until the dough just comes together, adding a little water if crumbly, or a little flour if it is too wet.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S3', 'R10', 'On the counter, knead the dough a few times; then flatten it into a disk, wrap in plastic, and chill for at least 30 minutes.');
+VALUES (3, 'R10', 'On the counter, knead the dough a few times; then flatten it into a disk, wrap in plastic, and chill for at least 30 minutes.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S4', 'R10', 'Preheat the oven to 400 degrees F. Roll out the dough on a floured surface to about ¹⁄8-inch thick. Cut out eight rounds to fit into eight individual 4-½–inch fluted -mini–tart pans. Fit the dough into the pans, and trim so the dough is flush with the rims. Chill for 15 minutes, then place on a sheet pan. ');
+VALUES (4, 'R10', 'Preheat the oven to 400 degrees F. Roll out the dough on a floured surface to about ¹⁄8-inch thick. Cut out eight rounds to fit into eight individual 4-½–inch fluted -mini–tart pans. Fit the dough into the pans, and trim so the dough is flush with the rims. Chill for 15 minutes, then place on a sheet pan. ');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S5', 'R10', 'Dock the dough with a fork, and place parchment circles filled with pie weights or beans in each tart. Bake until the dough is set but still blond in color, about 10 minutes. Remove the parchment and the weights, and continue baking until the dough is crisp and golden, about 10 to 15 minutes more. Remove from the oven, and cool on racks.');
+VALUES (5, 'R10', 'Dock the dough with a fork, and place parchment circles filled with pie weights or beans in each tart. Bake until the dough is set but still blond in color, about 10 minutes. Remove the parchment and the weights, and continue baking until the dough is crisp and golden, about 10 to 15 minutes more. Remove from the oven, and cool on racks.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S6', 'R10', 'For the coffee cream:');
+VALUES (6, 'R10', 'For the coffee cream:');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S7', 'R10', 'In a saucepan, bring the milk just to a simmer, and whisk in the espresso powder. In a medium bowl, whisk together the egg yolks, sugar, salt, cornstarch, and flour until smooth. Whisk in the hot milk a little at a time, tempering the eggs. Pour the mixture back into the saucepan over low heat until it just begins to simmer and thickens.');
+VALUES (7, 'R10', 'In a saucepan, bring the milk just to a simmer, and whisk in the espresso powder. In a medium bowl, whisk together the egg yolks, sugar, salt, cornstarch, and flour until smooth. Whisk in the hot milk a little at a time, tempering the eggs. Pour the mixture back into the saucepan over low heat until it just begins to simmer and thickens.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S8', 'R10', 'Strain it into a clean bowl, stir in the almond extract, and chill, covering the surface with plastic wrap to keep it from forming a skin.When the cream is chilled, fold in the whipped cream. Dollop the coffee cream into cooled tart shells, and garnish with almonds.');
+VALUES (8, 'R10', 'Strain it into a clean bowl, stir in the almond extract, and chill, covering the surface with plastic wrap to keep it from forming a skin.When the cream is chilled, fold in the whipped cream. Dollop the coffee cream into cooled tart shells, and garnish with almonds.');
 
 INSERT INTO Steps(StepNum, RID, Descr)
-VALUES ('S9', 'R10', 'Serve.');
+VALUES (9, 'R10', 'Serve.');
 
 --Recipe Themes--
 
@@ -2186,19 +2184,25 @@ from Affinitieslist al inner join ingredients i ON i.iid = al.iid
 
 create view publicationinformation AS
 Select 	p.pid, 
-		p.title, 
-		p.yearpublished, 
-		p.contentdescr, 
-		peo.perid, 
-		peo.fname as firstname,
-		peo.lname as lastname 
+	p.title, 
+	p.yearpublished, 
+	p.contentdescr, 
+	peo.perid, 
+	peo.fname,
+	peo.lname,
+	t.tid,
+	t.name 
 from 	Published pd, 
-		publishmethods p, 
-		authors a, 
-		people peo
+	publishmethods p, 
+	authors a, 
+	people peo,
+	Publishmethodsthemeslist ptl,
+	Themes t
 Where pd.pid = p.pid 
-  and pd.perid = a.perid 
-  and peo.perid = a.perid;
+     and pd.perid = a.perid 
+     and peo.perid = a.perid
+     and ptl.pid = p.pid
+     and ptl.tid = t.tid;
   
 ----------------------------------------------------------------------------------------
 -- Recipes Database Reports
@@ -2208,7 +2212,7 @@ Where pd.pid = p.pid
 
 --Number of publications associated with a particular author in a year--
 select 	peo.fname, 
-	peo.lname, 
+		peo.lname, 
 		count(*) as NumberOfPublications 
 from 	publishmethods p, 
         published pu, 
@@ -2377,6 +2381,7 @@ end;
 $$ 
 language plpgsql;
 
+--example use--
 select get_recipe_ingredientslist_byNameORID('Butternut Squash Soup', NULL, 'results');
 fetch all from results;
 
